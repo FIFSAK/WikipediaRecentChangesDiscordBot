@@ -1,0 +1,43 @@
+{
+  "id": [
+    {
+      "topic": "eqiad.mediawiki.recentchange",
+      "partition": 0,
+      "offset": -1
+    },
+    {
+      "topic": "codfw.mediawiki.recentchange",
+      "partition": 0,
+      "timestamp": 1738954224001
+    }
+  ],
+  "data": {
+    "$schema": "/mediawiki/recentchange/1.0.0",
+    "meta": {
+      "uri": "https://commons.wikimedia.org/wiki/Category:PD-US_missing_SDC_copyright_status",
+      "request_id": "7d6fb072-d792-415c-9d80-195f53e2e6bd",
+      "id": "5ba68837-4d83-49e0-928b-da633bc0a3c7",
+      "dt": "2025-02-07T18:50:24Z",
+      "domain": "commons.wikimedia.org",
+      "stream": "mediawiki.recentchange",
+      "topic": "codfw.mediawiki.recentchange",
+      "partition": 0,
+      "offset": 1466400178
+    },
+    "id": 2747361886,
+    "type": "categorize",
+    "namespace": 14,
+    "title": "Category:PD-US missing SDC copyright status",
+    "title_url": "https://commons.wikimedia.org/wiki/Category:PD-US_missing_SDC_copyright_status",
+    "comment": "[[:File:South Boston Gazette February 26, 1938 - DPLA - 3b83b051ff618b5be39ea118ca3483b4 (page 8).jpg]] added to category",
+    "timestamp": 1738954224,
+    "user": "DPLA bot",
+    "bot": true,
+    "notify_url": "https://commons.wikimedia.org/w/index.php?diff=995189526&oldid=0&rcid=2747361886",
+    "server_url": "https://commons.wikimedia.org",
+    "server_name": "commons.wikimedia.org",
+    "server_script_path": "/w",
+    "wiki": "commonswiki",
+    "parsedcomment": "<a href=\"/wiki/File:South_Boston_Gazette_February_26,_1938_-_DPLA_-_3b83b051ff618b5be39ea118ca3483b4_(page_8).jpg\" title=\"File:South Boston Gazette February 26, 1938 - DPLA - 3b83b051ff618b5be39ea118ca3483b4 (page 8).jpg\">File:South Boston Gazette February 26, 1938 - DPLA - 3b83b051ff618b5be39ea118ca3483b4 (page 8).jpg</a> added to category"
+  }
+}
