@@ -1,7 +1,6 @@
 package config
 
 import (
-	"fmt"
 	"github.com/joho/godotenv"
 	"log"
 	"os"
@@ -19,7 +18,6 @@ func ReadConfig() error {
 	}
 	Token = os.Getenv("TOKEN")
 	BotPrefix = os.Getenv("BOT_PREFIX")
-	fmt.Println("Token is:", Token+"\nBotPrefix is:", BotPrefix)
 
 	return nil
 }
