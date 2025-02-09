@@ -1,6 +1,11 @@
-redis_up:
-	docker run --name redis -p 6379:6379 -d redis
+run:
+	docker compose up -d
 
-start:
-	go build WikipediaRecentChangesDiscordBot/cmd
+build:
+	docker compose build
 
+stop:
+	docker compose down
+
+clean:
+	docker compose down -v --rmi all --remove-orphans

@@ -7,8 +7,10 @@ import (
 )
 
 var (
-	Token     string
-	BotPrefix string
+	Token         string
+	BotPrefix     string
+	RedisPassword string
+	RedisAddr     string
 )
 
 func ReadConfig() error {
@@ -17,6 +19,8 @@ func ReadConfig() error {
 	}
 	Token = os.Getenv("TOKEN")
 	BotPrefix = os.Getenv("BOT_PREFIX")
+	RedisPassword = os.Getenv("REDIS_PASSWORD")
+	RedisAddr = os.Getenv("REDIS_HOST") + ":" + "6379"
 
 	return nil
 }

@@ -13,10 +13,11 @@ import (
 var language string
 
 func recentHandler(s *discordgo.Session, m *discordgo.MessageCreate) {
+	if BotId == m.Author.ID {
+		return
+	}
 	if m.Content == config.BotPrefix+"recent" {
-		fmt.Println("Recent command received")
 		recent := wikipedia.GetRecentChanges()
-		fmt.Println("Recent changes: ", recent)
 		if len(recent) == 0 {
 			_, err := s.ChannelMessageSend(m.ChannelID, "No recent changes available.")
 			if err != nil {
@@ -44,6 +45,9 @@ func recentHandler(s *discordgo.Session, m *discordgo.MessageCreate) {
 }
 
 func setLangHandler(s *discordgo.Session, m *discordgo.MessageCreate) {
+	if BotId == m.Author.ID {
+		return
+	}
 	if strings.HasPrefix(m.Content, config.BotPrefix+"setLang") {
 		language = strings.TrimSpace(strings.TrimPrefix(m.Content, config.BotPrefix+"setLang "))
 		if language == "" || language == config.BotPrefix+"setLang" {
@@ -67,12 +71,15 @@ func setLangHandler(s *discordgo.Session, m *discordgo.MessageCreate) {
 }
 
 func statsChangesHandler(s *discordgo.Session, m *discordgo.MessageCreate) {
+	if BotId == m.Author.ID {
+		return
+	}
 	if strings.HasPrefix(m.Content, config.BotPrefix+"stats") {
 		args := strings.Split(m.Content, " ")
 		if len(args) != 2 {
 			_, err := s.ChannelMessageSend(m.ChannelID, "Usage: !stats [yyyy-mm-dd]")
 			if err != nil {
-				fmt.Println("Error sending message:", err)
+				fmt.Println(err.Error())
 			}
 			return
 		}
@@ -82,14 +89,14 @@ func statsChangesHandler(s *discordgo.Session, m *discordgo.MessageCreate) {
 		if _, err := time.Parse("2006-01-02", date); err != nil {
 			_, err = s.ChannelMessageSend(m.ChannelID, "Invalid date format. Use YYYY-MM-DD.")
 			if err != nil {
-				fmt.Println("Error sending message:", err)
+				fmt.Println(err.Error())
 			}
 			return
 		}
 		if language == "" || language == "any" {
 			_, err := s.ChannelMessageSend(m.ChannelID, fmt.Sprintf("Set a specific language by using !setLang"))
 			if err != nil {
-				fmt.Println("Error sending message:", err)
+				fmt.Println(err.Error())
 			}
 			return
 		}
@@ -97,17 +104,16 @@ func statsChangesHandler(s *discordgo.Session, m *discordgo.MessageCreate) {
 		if changes == 0 {
 			_, err := s.ChannelMessageSend(m.ChannelID, fmt.Sprintf("No changes found for %s on %s.", language, date))
 			if err != nil {
-				fmt.Println("Error sending message:", err)
+				fmt.Println(err.Error())
 			}
 			return
 		}
 
-		// Формируем сообщение
 		message := fmt.Sprintf("On %s, there were %d changes in %s.", date, changes, language)
 
 		_, err := s.ChannelMessageSend(m.ChannelID, message)
 		if err != nil {
-			fmt.Println("Error sending message:", err)
+			fmt.Println(err.Error())
 		}
 	}
 }

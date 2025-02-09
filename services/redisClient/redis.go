@@ -1,6 +1,7 @@
 package redisClient
 
 import (
+	"WikipediaRecentChangesDiscordBot/config"
 	"context"
 	"errors"
 	"fmt"
@@ -11,15 +12,16 @@ var Rdb *redis.Client
 var Ctx = context.Background()
 
 func InitializeRedis() {
+
 	Rdb = redis.NewClient(&redis.Options{
-		Addr:     "localhost:6379",
-		Password: "",
+		Addr:     config.RedisAddr,
+		Password: config.RedisPassword,
 		DB:       0,
 	})
 
 	_, err := Rdb.Ping(Ctx).Result()
 	if err != nil {
-		fmt.Printf("Failed to connect to Redis: %v\n", err)
+		fmt.Printf(err.Error())
 		panic(err)
 	}
 
@@ -34,7 +36,7 @@ func IncrementChanges(date string, language string) {
 		return
 	}
 	//fmt.Printf("Incremented key: %s\n", key)
-	
+
 }
 
 func GetChanges(date string, language string) int {
