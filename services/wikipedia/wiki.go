@@ -20,7 +20,7 @@ func addChange(change WikipediaChange) {
 	mu.Lock()
 	defer mu.Unlock()
 
-	if len(mostRecentChange) >= 10 {
+	if len(mostRecentChange) == capacity {
 		mostRecentChange = mostRecentChange[1:]
 	}
 

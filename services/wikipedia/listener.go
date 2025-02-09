@@ -15,6 +15,7 @@ var (
 	url                = "https://stream.wikimedia.org/v2/stream/recentchange"
 	mu                 sync.Mutex
 	mostRecentChange   = make([]WikipediaChange, 0, 10)
+	capacity           = cap(mostRecentChange)
 	LanguageFilterChan = make(chan string)
 	allowedWikis       = getAllowedWikiValues()
 	AllowedLanguages   = map[string]string{
