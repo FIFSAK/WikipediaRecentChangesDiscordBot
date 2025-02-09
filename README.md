@@ -9,9 +9,7 @@ the Discord Bot.
 ## Installation
 
 ### Prerequisites
-
 - Docker, docker compose
-
 ---
 
 ### Steps
@@ -40,7 +38,7 @@ Note: You can use [Makefile](./Makefile) to run the bot.
 - [config](./config) contains the configuration for the application
 
 ## Additional
-
+- CI/CD [pipeline](https://gitlab.com/anuar200572/WikipediaRecentChangesDiscordBot/-/blob/master/.gitlab-ci.yml?ref_type=heads)
 - The bot filtering changes by fixed languages they can be easily changes by adding
   them [here](https://github.com/FIFSAK/WikipediaRecentChangesDiscordBot/blob/master/services/wikipedia/listener.go#L20)
 - The bot stores up to the last 10
