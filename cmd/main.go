@@ -3,7 +3,8 @@ package main
 import (
 	"WikipediaRecentChangesDiscordBot/bot"
 	"WikipediaRecentChangesDiscordBot/config"
-	"WikipediaRecentChangesDiscordBot/listener"
+	"WikipediaRecentChangesDiscordBot/services/redisClient"
+	"WikipediaRecentChangesDiscordBot/services/wikipedia"
 	"fmt"
 	"os"
 	"os/signal"
@@ -17,10 +18,12 @@ func main() {
 		return
 	}
 
+	redisClient.InitializeRedis()
+
 	var wg sync.WaitGroup
 
 	wg.Add(1)
-	go listener.ListenToWikipediaChanges(&wg)
+	go wikipedia.ListenToWikipediaChanges(&wg)
 
 	bot.Start()
 
@@ -29,7 +32,6 @@ func main() {
 
 	go func() {
 		<-c
-		close(listener.LanguageFilterChan)
 		os.Exit(0)
 	}()
 	wg.Wait()

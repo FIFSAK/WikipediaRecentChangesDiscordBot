@@ -1,12 +1,14 @@
-package listener
+package wikipedia
 
 import (
+	"WikipediaRecentChangesDiscordBot/services/redisClient"
 	"bufio"
 	"encoding/json"
 	"fmt"
 	"net/http"
 	"strings"
 	"sync"
+	"time"
 )
 
 var (
@@ -14,6 +16,17 @@ var (
 	mu                 sync.Mutex
 	mostRecentChange   = make([]WikipediaChange, 0, 10)
 	LanguageFilterChan = make(chan string)
+	allowedWikis       = getAllowedWikiValues()
+	AllowedLanguages   = map[string]string{
+		"en":  "enwiki",
+		"de":  "dewiki",
+		"fr":  "frwiki",
+		"es":  "eswiki",
+		"it":  "itwiki",
+		"ru":  "ruwiki",
+		"cm":  "commonswiki",
+		"any": "",
+	}
 )
 
 func ListenToWikipediaChanges(wg *sync.WaitGroup) {
@@ -54,6 +67,9 @@ func ListenToWikipediaChanges(wg *sync.WaitGroup) {
 			mu.Lock()
 			filter := currentFilter
 			mu.Unlock()
+			if allowedWikis[change.Wiki] {
+				redisClient.IncrementChanges(time.Now().Format("2006-01-02"), change.Wiki)
+			}
 
 			if change.Wiki != filter && filter != "" {
 				continue
@@ -68,3 +84,18 @@ func ListenToWikipediaChanges(wg *sync.WaitGroup) {
 		fmt.Println(err.Error())
 	}
 }
+
+func getAllowedWikiValues() map[string]bool {
+	values := make(map[string]bool, len(AllowedLanguages))
+	for _, value := range AllowedLanguages {
+		values[value] = true
+	}
+	return values
+}
+
+// Получение текущего фильтра языка
+//func GetCurrentLanguageFilter() string {
+//	mu.Lock()
+//	defer mu.Unlock()
+//	return currentLanguageFilter
+//}
