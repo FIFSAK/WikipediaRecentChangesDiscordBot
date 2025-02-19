@@ -3,6 +3,7 @@ package main
 import (
 	"WikipediaRecentChangesDiscordBot/bot"
 	"WikipediaRecentChangesDiscordBot/config"
+	"WikipediaRecentChangesDiscordBot/services/kafka"
 	"WikipediaRecentChangesDiscordBot/services/redisClient"
 	"WikipediaRecentChangesDiscordBot/services/wikipedia"
 	"fmt"
@@ -12,20 +13,22 @@ import (
 )
 
 func main() {
-	err := config.ReadConfig()
+	conf, err := config.New()
 	if err != nil {
 		fmt.Println(err.Error())
 		return
 	}
 
-	redisClient.InitializeRedis()
+	_ = kafka.NewKafka(conf)
+
+	redis := redisClient.NewRedisClient(conf)
 
 	var wg sync.WaitGroup
 
 	wg.Add(1)
-	go wikipedia.ListenToWikipediaChanges(&wg)
+	go wikipedia.ListenToWikipediaChanges(&wg, redis)
 
-	bot.Start()
+	bot.Start(conf, redis)
 
 	c := make(chan os.Signal, 1)
 	signal.Notify(c, os.Interrupt)

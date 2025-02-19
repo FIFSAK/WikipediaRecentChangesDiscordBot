@@ -1,7 +1,7 @@
 package wikipedia
 
 import (
-	"WikipediaRecentChangesDiscordBot/services/redisClient"
+	"WikipediaRecentChangesDiscordBot/services/kafka"
 	"bufio"
 	"encoding/json"
 	"fmt"
@@ -30,9 +30,9 @@ var (
 	}
 )
 
-func ListenToWikipediaChanges(wg *sync.WaitGroup) {
+func ListenToWikipediaChanges(wg *sync.WaitGroup, kafka *kafka.Kafka) {
 	defer wg.Done()
-
+	Kp := kafka
 	resp, err := http.Get(url)
 	if err != nil {
 		fmt.Println(err.Error())
@@ -69,7 +69,11 @@ func ListenToWikipediaChanges(wg *sync.WaitGroup) {
 			filter := currentFilter
 			mu.Unlock()
 			if allowedWikis[change.Wiki] {
-				redisClient.IncrementChanges(time.Now().Format("2006-01-02"), change.Wiki)
+				err = Kp.SendKafka(time.Now().Format("2006-01-02"), change.Wiki)
+				if err != nil {
+					fmt.Println(err.Error())
+					return
+				}
 			}
 
 			if change.Wiki != filter && filter != "" {

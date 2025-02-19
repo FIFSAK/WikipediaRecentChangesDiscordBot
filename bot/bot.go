@@ -2,17 +2,19 @@ package bot
 
 import (
 	"WikipediaRecentChangesDiscordBot/config"
+	"WikipediaRecentChangesDiscordBot/services/redisClient"
 	"fmt"
 	"github.com/bwmarrin/discordgo"
 )
 
 var (
 	BotId string
+	Rc    *redisClient.RedisClient
 )
 
-func Start() {
-	goBot, err := discordgo.New("Bot " + config.Token)
-
+func Start(c *config.Config, redis *redisClient.RedisClient) {
+	goBot, err := discordgo.New("Bot " + c.Token)
+	Rc = redis
 	if err != nil {
 		fmt.Println(err.Error())
 		return
@@ -26,9 +28,11 @@ func Start() {
 
 	BotId = u.ID
 
-	goBot.AddHandler(recentHandler)
-	goBot.AddHandler(setLangHandler)
-	goBot.AddHandler(statsChangesHandler)
+	handlers := NewHandlers(c)
+
+	goBot.AddHandler(handlers.BotHandlers.recentHandler)
+	goBot.AddHandler(handlers.BotHandlers.setLangHandler)
+	goBot.AddHandler(handlers.BotHandlers.statsChangesHandler)
 
 	err = goBot.Open()
 
