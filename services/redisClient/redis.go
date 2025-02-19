@@ -6,6 +6,7 @@ import (
 	"errors"
 	"fmt"
 	"github.com/go-redis/redis/v8"
+	"time"
 )
 
 var Rdb *redis.Client
@@ -28,15 +29,27 @@ func InitializeRedis() {
 	fmt.Println("Successfully connected to Redis")
 }
 
-func IncrementChanges(date string, language string) {
+func IncrementChanges(date string, language string) error {
 	key := fmt.Sprintf("%s:%s", date, language)
-	err := Rdb.Incr(Ctx, key).Err()
-	if err != nil {
-		fmt.Println(err.Error())
-		return
-	}
-	//fmt.Printf("Incremented key: %s\n", key)
 
+	exists, err := Rdb.Exists(Ctx, key).Result()
+	if err != nil {
+		return fmt.Errorf("failed to check existence: %w", err)
+	}
+
+	if exists == 0 {
+		err = Rdb.Set(Ctx, key, 1, time.Hour*24*7).Err()
+		if err != nil {
+			return fmt.Errorf("failed to set key: %w", err)
+		}
+	} else {
+		_, err = Rdb.Incr(Ctx, key).Result()
+		if err != nil {
+			return fmt.Errorf("failed to incr key: %w", err)
+		}
+	}
+
+	return nil
 }
 
 func GetChanges(date string, language string) int {
