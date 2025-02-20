@@ -26,7 +26,6 @@ func NewKafka(config *config.Config) *Kafka {
 		Topic:   config.KafkaTopic,
 		GroupID: config.KafkaGroup,
 	})
-	defer writer.Close()
 	return &Kafka{
 		Config:  config,
 		Context: context.Background(),
@@ -48,6 +47,15 @@ func (k *Kafka) SendKafka(date string, language string) error {
 		return err
 	}
 
-	fmt.Println("Event sent to Kafka")
+	return nil
+}
+
+func (k *Kafka) Close() error {
+	if err := k.Writer.Close(); err != nil {
+		return err
+	}
+	if err := k.Reader.Close(); err != nil {
+		return err
+	}
 	return nil
 }

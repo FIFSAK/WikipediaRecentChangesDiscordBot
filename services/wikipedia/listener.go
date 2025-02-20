@@ -30,8 +30,7 @@ var (
 	}
 )
 
-func ListenToWikipediaChanges(wg *sync.WaitGroup, kafka *kafka.Kafka) {
-	defer wg.Done()
+func ListenToWikipediaChanges(kafka *kafka.Kafka) {
 	Kp := kafka
 	resp, err := http.Get(url)
 	if err != nil {
